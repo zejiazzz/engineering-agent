@@ -33,6 +33,7 @@ const bundleFiles = [
   "plugins/auto-commit.md",
   "plugins/code-review.md",
   "plugins/frontend-standards.md",
+  "plugins/engineering-diagnostics.md",
   "plugins/frontend/structure.md",
   "plugins/frontend/design.md",
   "plugins/feishu-defects.md",

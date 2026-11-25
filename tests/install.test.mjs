@@ -190,6 +190,7 @@ test("installed CLI composes defaults and honors project settings", (t) => {
     "git-delivery",
     "code-review",
     "frontend-standards",
+    "engineering-diagnostics",
   ]);
   assert.deepEqual(JSON.parse(passed(compose(...defaultIds))), [
     core,

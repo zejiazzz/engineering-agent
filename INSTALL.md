@@ -33,7 +33,7 @@ node install.mjs --host codex --dry-run
 node install.mjs --host codex
 ```
 
-先运行普通的 `--dry-run`。预览列出共享包和宿主文件的实际绝对路径，判断安装方式与验收时都以这些路径为准。用 Codex 时，只检查预览所列 `AGENTS.md` 及其同目录中的 `AGENTS.override.md`。例如 `CODEX_HOME` 指向新目录且该目录还没有指令文件时，执行普通安装，写入该目录的用户级入口。已检查的实际目标符合下表的托管场景时，加 `--bundle-only` 重新预览。
+先运行普通的 `--dry-run`。核对输出的共享目录与宿主文件实际路径，然后执行普通安装。安装器会检查这些实际目标的规则生成标记、符号链接或生效的覆盖文件。收到明确的 `--bundle-only` 提示时，再按下表选择接入方式并重新预览。用户明确要求只更新共享包时，也可按下表使用 `--bundle-only`。例如 `CODEX_HOME` 指向新目录时，普通安装会在该目录写入用户级入口。
 
 共享包默认安装到 `~/.agent-harness/`。已设置 `AGENT_HARNESS_HOME` 时沿用该目录。宿主实际使用自定义配置目录时，在预览和安装命令都加入 `--host-dir` 并传入该目录。用户选择多种宿主时，逐一运行并记录结果。
 
@@ -57,7 +57,8 @@ node install.mjs --host codex
 
    ```bash
    node "${AGENT_HARNESS_HOME:-$HOME/.agent-harness}/compose.mjs" \
-     code-review frontend-standards git-delivery feishu-defects talk-live-verification
+     code-review frontend-standards git-delivery feishu-defects \
+     talk-live-verification engineering-diagnostics
    ```
 
    PowerShell 可将路径替换为安装器输出的绝对路径。

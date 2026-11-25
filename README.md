@@ -76,6 +76,7 @@ node install.mjs --host opencode
 | Git 交付      | [auto-commit](plugins/auto-commit.md)               |
 | 独立代码审查  | [code-review](plugins/code-review.md)               |
 | Web 前端      | [目录和设计规范](plugins/frontend-standards.md)     |
+| 工程诊断      | [架构历史、交接成本、PR 耗时与缺陷复盘](plugins/engineering-diagnostics.md) |
 
 在目标项目根目录校验文件并预览装配。
 
