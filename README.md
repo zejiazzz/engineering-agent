@@ -9,7 +9,7 @@
 把下面这句发给能访问本仓库并执行终端命令的 AI。
 
 ```text
-请读取 https://raw.githubusercontent.com/zejiazzz/engineering-agent/main/INSTALL.md 并自行识别当前宿主，按指南在本机安装和验证研发 Agent。
+请读取 https://raw.githubusercontent.com/zejiazzz/engineering-agent/main/INSTALL.md，自行识别当前宿主，先按指南执行普通预览和安装，仅在安装器提示时使用 --bundle-only，最后验证实际宿主入口。
 ```
 
 [安装指南](INSTALL.md)
