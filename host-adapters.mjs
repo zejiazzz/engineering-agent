@@ -1,7 +1,9 @@
+import { lstatSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 
 const skillPath = "skills/engineering-agent/SKILL.md";
+const skillMarker = "<!-- business-agent-managed: engineering-agent -->";
 const reviewDescription =
   "独立只读审查变更，核对项目契约、回归风险和验证证据。";
 
@@ -112,9 +114,21 @@ function instructions(adapter, packageDir) {
         "。用户明确说「用研发 Agent」时进入同一流程。纯问答沿用当前会话。",
       "在目标仓库读取可选的 .agent-harness.json，并按任务装配共用能力和项目适配器。" +
         review,
+      "按 acceptance 入口设计和执行用例、真实验收、续验及验收排障。",
       "实际命令、模型、连接器及审批由当前宿主提供，并按项目约定和用户授权使用。",
     ].join("\n") + "\n"
   );
+}
+
+// 只更新安装器曾通过 --bundle-only 部署的后备 Skill。
+function hasManagedSkill(path) {
+  try {
+    return lstatSync(path).isFile() &&
+      readFileSync(path, "utf8").split(/\r?\n/).includes(skillMarker);
+  } catch (error) {
+    if (["ENOENT", "ENOTDIR", "EACCES", "EPERM"].includes(error.code)) return false;
+    throw error;
+  }
 }
 
 /** 各宿主仅部署入口和角色。任务、模型与授权由宿主执行。 */
@@ -131,15 +145,19 @@ export function hostPlan(id, packageDir, options) {
       content: body,
     });
   }
-  const skill = adapter.skill || (options.bundleOnly && adapter.fallbackSkill);
+  let skill = adapter.skill;
+  if (adapter.fallbackSkill &&
+      (options.bundleOnly || hasManagedSkill(join(root, adapter.fallbackSkill)))) {
+    skill = adapter.fallbackSkill;
+  }
   if (skill) {
     const header = [
       "---",
       "name: engineering-agent",
-      "description: 使用组织的研发 Agent 流程处理需求分析、代码实现、验证、审查、飞书缺陷、Talk 验收与 Git 交付。用户说「用研发 Agent」时调用。",
+      "description: 使用组织的研发 Agent 流程处理需求分析、代码实现、用例与真实验收、续验、验收排障、审查、飞书缺陷和 Git 交付。用户说「用研发 Agent」时调用。",
       "---",
       "",
-      "<!-- business-agent-managed: engineering-agent -->",
+      skillMarker,
       "",
     ].join("\n");
     outputs.push({

@@ -27,6 +27,8 @@ const bundleFiles = [
   "CONTRIBUTING.md",
   "LICENSE",
   "core.md",
+  "acceptance.md",
+  "verify.mjs",
   "defaults.json",
   "compose.mjs",
   "codex-global.md",
@@ -37,9 +39,6 @@ const bundleFiles = [
   "plugins/frontend/structure.md",
   "plugins/frontend/design.md",
   "plugins/feishu-defects.md",
-  "plugins/talk-live-verification.md",
-  "plugins/talk/ledger.cjs",
-  "plugins/talk/run-cases.cjs",
 ];
 
 function inspect(path) {

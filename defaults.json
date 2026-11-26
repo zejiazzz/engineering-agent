@@ -7,9 +7,9 @@
       "entry": "plugins/feishu-defects.md"
     },
     {
-      "id": "talk-live-verification",
-      "when": "用户要求执行、续跑或排查当前项目的 Talk 或对话生成真实验收时启用。仅分析或设计沿用用户指定的范围。",
-      "entry": "plugins/talk-live-verification.md"
+      "id": "acceptance",
+      "when": "用户要求设计或执行用例、真实验收、续验或验收排障时启用。按当前项目的需求、入口、运行环境和证据确定验收范围。",
+      "entry": "acceptance.md"
     },
     {
       "id": "git-delivery",

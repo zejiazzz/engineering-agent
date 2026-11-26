@@ -27,7 +27,7 @@ node install.mjs --host deepseek-harness
 node install.mjs --host opencode
 ```
 
-按需要安装相应宿主。所有宿主共用 `~/.agent-harness/` 的运行包，项目目录无需重新复制规则。用 `--dry-run` 预览写入路径。宿主使用自定义配置目录时传 `--host-dir <目录>`。共享包路径可由环境变量 `AGENT_HARNESS_HOME` 指定，调用共享账本等命令时使用同一变量。
+按需要安装相应宿主。所有宿主共用 `~/.agent-harness/` 的运行包，项目目录无需重新复制规则。用 `--dry-run` 预览写入路径。宿主使用自定义配置目录时传 `--host-dir <目录>`。共享包路径可由环境变量 `AGENT_HARNESS_HOME` 指定，调用共用校验器时使用同一变量。
 
 | 宿主             | 入口                                                   | 独立审查                                      |
 | ---------------- | ------------------------------------------------------ | --------------------------------------------- |
@@ -49,6 +49,10 @@ node install.mjs --host opencode
 - Claude Code 的全局指令是符号链接或由其他工具维护时，`--bundle-only` 部署全局 Skill 和子角色。其他宿主若需从外部规则生成源启用，登记「处理仓库任务时，先读取研发 Agent 共用包的 `core.md`」。
 - 安装器保留其他用户指令。已有未托管的同名 Skill 或角色时停止安装并标出路径。回退需用前一发布版本，并恢复与版本匹配的宿主入口和项目适配器。
 - 安装中断时，检查包目录父级 `.engineering-agent-install.lock` 的 PID。进程已退出且共享包缺失时，可从该次 `.engineering-agent-bundle-*/previous` 恢复旧包，再清理过期锁并重新安装相应宿主。
+
+## 从需求到验收
+
+给 Agent 一份需求文档，它会先核对目标、完整性和合理性。遇到缺陷、歧义或可优化点，会列出依据与选项，请你决定。目标明确后，Agent 在项目里建立测试用例，逐条写清文案、操作和预期，再从用户路径及实际改动补充回归。提供交互文档或设计稿时，逐处比对运行界面；发现偏差后回到开发修复，并用原用例复验。项目沿用原有用例格式。交付前，共用校验器将已确认的检查点逐项对照实测和证据文件，输出可供 CI 使用的退出码。示例与使用方法见[需求审查与逐项验收](acceptance.md)。
 
 ## 项目接入
 
@@ -72,11 +76,13 @@ node install.mjs --host opencode
 | 共用能力      | 入口                                                |
 | ------------- | --------------------------------------------------- |
 | 飞书缺陷      | [取证、修复与同步](plugins/feishu-defects.md)       |
-| Talk 真实验收 | [验收和共用账本](plugins/talk-live-verification.md) |
+| 通用验收 | [需求、用例、证据与程序化判定](acceptance.md) |
 | Git 交付      | [auto-commit](plugins/auto-commit.md)               |
 | 独立代码审查  | [code-review](plugins/code-review.md)               |
 | Web 前端      | [目录和设计规范](plugins/frontend-standards.md)     |
 | 工程诊断      | [架构历史、交接成本、PR 耗时与缺陷复盘](plugins/engineering-diagnostics.md) |
+
+实现交付的最终判定由核心调用共享校验器。项目可用适配器提供自己的场景、证据和运行记录；其他项目默认只加载通用规则。
 
 在目标项目根目录校验文件并预览装配。
 
