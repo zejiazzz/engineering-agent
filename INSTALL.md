@@ -52,7 +52,7 @@ node install.mjs --host codex
 
 ### 3. 验证安装和项目接入
 
-1. 核对安装器退出码、共享包的 `core.md`、`compose.mjs`、`acceptance.md` 和 `verify.mjs`，以及预览里选择的入口、Skill 或角色文件。核对实际目标宿主的生效入口指向本次共享包。能在使用同一宿主配置目录的新会话看见并调用时，再确认入口已加载。
+1. 核对安装器退出码、共享包的 `core.md`、`compose.mjs`、`acceptance.md` 、`verify.mjs` 和 `workflow.mjs`，以及预览里选择的入口、Skill 或角色文件。核对实际目标宿主的生效入口指向本次共享包。能在使用同一宿主配置目录的新会话看见并调用时，再确认入口已加载。
 2. 在无项目清单的临时目录执行下面的装配检查。使用自定义共享包时保留同一个 `AGENT_HARNESS_HOME`。该命令只校验和预览装配，适合验证发布包和默认能力是否完整。
 
    ```bash

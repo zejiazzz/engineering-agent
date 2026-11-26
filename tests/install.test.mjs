@@ -37,7 +37,7 @@ function setup(t) {
   function run(args) {
     const result = spawnSync(process.execPath, args, {
       cwd: project,
-      env: { ...process.env, AGENT_HARNESS_HOME: bundle },
+      env: { ...process.env, AGENT_HARNESS_HOME: bundle, AGENT_HARNESS_STATE_DIR: join(root, "state") },
       encoding: "utf8",
     });
     assert.ifError(result.error);
@@ -99,6 +99,10 @@ test("every host installs and upgrades the same shared acceptance entry and runt
     assert.deepEqual(readdirSync(plugins, { recursive: true }).sort(), shippedPlugins);
     const core = join(bundle, "core.md");
     const guide = join(bundle, "acceptance.md");
+    const workflow = join(bundle, "workflow.mjs");
+    assert.ok(read(core).includes("(workflow.md)"));
+    assert.ok(read(join(bundle, "workflow.md")).includes("resume"));
+    assert.deepEqual(JSON.parse(passed(fixture.run([workflow, "list"]))), []);
     assert.deepEqual(JSON.parse(passed(fixture.compose())), [core]);
     assert.deepEqual(JSON.parse(passed(fixture.compose("acceptance"))), [core, guide]);
     assert.equal(read(join(bundle, "verify.mjs")), read(new URL("../verify.mjs", import.meta.url)));
