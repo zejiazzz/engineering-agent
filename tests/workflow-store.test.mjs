@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { spawn, spawnSync } from "node:child_process";
 import { once } from "node:events";
 import {
-  chmodSync, cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync,
+  chmodSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync,
   renameSync, rmSync, statSync, symlinkSync, unlinkSync, writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -241,12 +241,27 @@ test("只读项目创建失败且不转存其他目录", { skip: !process.getuid
   } finally { chmodSync(project, 0o700); }
 });
 
+// 保留测试目录的权限，让副本走到项目路径校验。
+function copyProjectFixture(source, destination) {
+  const stat = statSync(source);
+  const mode = stat.mode & 0o777;
+  if (!stat.isDirectory()) {
+    writeFileSync(destination, readFileSync(source), { mode });
+    return;
+  }
+
+  mkdirSync(destination, { mode });
+  for (const name of readdirSync(source)) {
+    copyProjectFixture(join(source, name), join(destination, name));
+  }
+}
+
 for (const change of ["复制", "重命名"]) {
   test(change + "了项目的旧任务不进入驱动，当前项目可独立创建并列出新任务", async t => {
     const { root, project, store } = setup(t, true);
     const initial = store.create({ phase: "plan", objective: "仅在原项目执行" });
     const moved = join(root, "new-location");
-    if (change === "复制") cpSync(project, moved, { recursive: true });
+    if (change === "复制") copyProjectFixture(project, moved);
     else renameSync(project, moved);
     const foreign = storeFor(moved, "one");
     const mismatch = { code: "EPROJECTMISMATCH" };
